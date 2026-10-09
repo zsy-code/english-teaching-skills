@@ -11,7 +11,7 @@ CORE = ['hyperframes', 'hyperframes-core', 'hyperframes-animation',
         'hyperframes-creative', 'hyperframes-cli', 'general-video']
 
 
-def inspect(skill, runtime, roots, provider=None):
+def inspect(skill, runtime, roots, provider=None, connection=None):
     checks = []
     def add(name, ok, detail):
         checks.append(dict(name=name, ok=bool(ok), detail=detail))
@@ -28,7 +28,7 @@ def inspect(skill, runtime, roots, provider=None):
     add('npm', shutil.which('npm') is not None, '运行环境的包管理器')
     files = ['SKILL.md', 'references/input.md', 'references/teaching-plan.md',
              'references/batch.md', 'references/course-script.md', 'references/audio-timing.md',
-             'references/animation.md', 'references/delivery.md', 'scripts/script_tool.py',
+             'references/animation.md', 'references/delivery.md', 'references/services.md', 'scripts/service-client.mjs', 'scripts/script_tool.py',
              'scripts/audio_tool.py', 'scripts/synthesize.mjs', 'scripts/package_course.mjs',
              'scripts/deliver_course.py', 'scripts/preview_server.py',
              'assets/lesson-player/contract.js', 'assets/lesson-player/runtime.js',
@@ -47,7 +47,7 @@ def inspect(skill, runtime, roots, provider=None):
         found = next((r / name / 'SKILL.md' for r in roots if (r / name / 'SKILL.md').is_file()), None)
         add('skill:' + name, found is not None, str(found) if found else '缺少或未提供正确的技能父目录')
     return dict(filesAndRuntimeOk=all(c['ok'] for c in checks), checks=checks,
-                tts='module_found_not_tested' if provider and provider.is_file() else 'not_configured',
+                tts='connection_found_not_tested' if connection and connection.is_file() else 'module_found_not_tested' if provider and provider.is_file() else 'not_configured',
                 browser='not_tested', agentSkillDiscovery='not_tested', subagents='host_dependent',
                 note='这不是完整课程制作验收；不读取密钥、不调用配音、不安装软件。')
 
@@ -58,8 +58,9 @@ def main():
     p.add_argument('--runtime-dir', type=Path, required=True)
     p.add_argument('--hyperframes-skills-dir', type=Path, action='append', default=[])
     p.add_argument('--tts-provider', type=Path)
+    p.add_argument('--connection', type=Path)
     a = p.parse_args()
-    result = inspect(a.skill_dir, a.runtime_dir, a.hyperframes_skills_dir, a.tts_provider)
+    result = inspect(a.skill_dir, a.runtime_dir, a.hyperframes_skills_dir, a.tts_provider, a.connection)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result['filesAndRuntimeOk'] else 1
 

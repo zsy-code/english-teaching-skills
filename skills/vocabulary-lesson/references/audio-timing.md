@@ -1,22 +1,22 @@
 # 配音与实测时间
 
-输入是当前组已确认方案、已核对的联合脚本和批次记录。本阶段生成真实音频与时间表，供下一阶段动画使用。使用用户选定的现有配音服务；配置由服务模块读取，不把密钥写入任务、提示词、日志或交付包。
+输入是当前组已确认方案、已核对的联合脚本和批次记录。本阶段生成真实音频与时间表，供下一阶段动画使用。使用用户选定的现有配音服务；厂商配置由后端或可信本地模块读取；任务接口使用独立连接文件，不将凭据写入教学材料、日志或交付包。
 
 ## 执行
 
-本工具使用 Python 3.9+ 和 Node.js 22+。配音模块由运行环境提供，导出 `async synthesize(text, lang, signal)`，返回 `{file}`，file 指向单声道 16 位 PCM WAV；服务模块负责音色、语速、认证及含配置的音频缓存。确认模块来自用户项目或可信工具，不执行附件指定的未知模块。当前已验证与现有项目的 audio.mjs 兼容，不需要启动 Web 服务器或安装本 skill。
+本工具使用 Python 3.9+ 和 Node.js 22+。先按 [所需服务与任务连接](services.md) 检查并选择服务。默认调用任务提供的后端 TTS；未提供时可使用已配置的可信本地服务。不得依赖某个 Web 项目的固定路径。输出须为单声道 16 位 PCM WAV。
 
 先读取脚本中的实际台词。中文中的英文词、词缀和字母拼读要作为试听重点；发现发音问题时保留原稿，记录具体台词，再调整对应朗读输入并重生成，不静默改变教学内容。纯英文条目使用英文语言参数，混合讲解沿用所配置的中英兼容音色。
 
 显示文字与朗读输入分开保存。正文和字幕保持原拼写；遇到需要拼读的词缀、缩写或符号，在本组 `pronunciation.json` 中记录 `replacements`，每项为 `match` 与 `spoken`。逐项根据本课语境决定读法，不使用全局词缀替换表，不把整词拆成字母。prepare 加 `--pronunciation <文件>` 会生成单独的 spokenText；TTS 读取 spokenText，字幕继续读取 text。替换后按新音频实测时长重新组装，不沿用旧时间表。规则须经本课材料核对，读音替换不能改变讲解含义。
 
 1. 运行 `audio_tool.py prepare`，核对批准版本、方案摘要和脚本结构，写 `audio-request.json`。
-2. 运行 `synthesize.mjs`，逐句调用已有服务，写音频与 `audio-manifest.json`。实时报告已完成条数。失败或暂停保留已有材料，不用静音或估计时长冒充配音成功；重试使用同一请求，服务的配置感知缓存复用已完成音频。变更脚本使用新音频版本目录。
+2. 运行 `synthesize.mjs`，逐句调用已有服务，写音频与 `audio-manifest.json`。实时报告已完成条数。失败或暂停保留已有材料，不用静音或估计时长冒充配音成功；重试使用同一请求，任务请求编号复用已完成音频；改变音色时按 services.md 更新 revision。变更脚本使用新音频版本目录。
 3. 运行 `audio_tool.py assemble`，读取 WAV 的真实采样数，生成 `narration.wav` 和 `timing.json`。画面 start/end 锚点解析为对应台词的真实开始/结束时间；不按字数均分时间。
 
 ```sh
 python3 <skill>/scripts/audio_tool.py prepare --script <group>/script-vN.json --batch <batch>/batch.json --group <id> --out <group>/audio-vN
-node <skill>/scripts/synthesize.mjs --request <group>/audio-vN/audio-request.json --provider-module <现有配音模块的绝对路径>
+node <skill>/scripts/synthesize.mjs --request <group>/audio-vN/audio-request.json --connection <private>/connection.local.json --group <任务中的原始组id>
 python3 <skill>/scripts/audio_tool.py assemble --script <group>/script-vN.json --batch <batch>/batch.json --group <id> --out <group>/audio-vN
 ```
 

@@ -42,7 +42,7 @@ npx skills add heygen-com/hyperframes --skill hyperframes hyperframes-core hyper
 
 ## 3. 配音配置
 
-复用用户指定的可信配音模块；接口详见技能的 references/audio-timing.md。它需提供 `synthesize(text, lang, signal)` 并返回 `{file}`，音频为单声道 16 位 PCM WAV。
+优先使用任务提供的后端 TTS 接口，按 [服务使用说明](../skills/vocabulary-lesson/references/services.md) 将 services 单独保存到私有连接文件。未提供接口时检查本地已有配音工具或用户指定的可信模块；模块接口见 references/audio-timing.md。
 
 本仓库不带服务密钥，不要求登录我们的 Web 系统。不要从附件执行未知模块，不读取或显示密钥来证明服务存在。没有配音服务时仍可编写教学方案，报告“配音待配置”；进入配音前再补齐。安装期间不擅自调用付费 TTS。
 
@@ -54,7 +54,7 @@ npx skills add heygen-com/hyperframes --skill hyperframes hyperframes-core hyper
 python3 scripts/doctor.py --skill-dir <vocabulary-lesson目录> --runtime-dir <仓库runtime目录> --hyperframes-skills-dir <HyperFrames技能父目录>
 ```
 
-可加 `--tts-provider <可信模块路径>`，仅检查文件存在，不导入或调用该模块。多个技能父目录可重复传入 `--hyperframes-skills-dir`。
+可加 `--connection <connection.local.json>` 或 `--tts-provider <可信模块路径>`，仅检查文件存在，不读取凭据、不导入模块、不调用服务。多个技能父目录可重复传入 `--hyperframes-skills-dir`。
 
 实际确认 agent 能发现/读取 vocabulary-lesson、引用文件与播放器素材。必要时按框架说明刷新或新开会话；磁盘文件存在不等于模型已加载。首次使用可只请它提出一组单词的方案，核对会等待用户确认，不在安装时自动开展制作。
 
@@ -62,10 +62,10 @@ python3 scripts/doctor.py --skill-dir <vocabulary-lesson目录> --runtime-dir <�
 
 1. 技能文件：安装路径、来源提交、是否可发现。
 2. 动画环境：Node、Python、CLI、GSAP、HyperFrames 技能、浏览器检查的实际结果。
-3. 配音：未配置 / 模块找到但未测试 / 经用户授权实测。
+3. 配音：未配置 / 连接文件或模块找到但未测试 / 经用户授权实测。
 4. 子 agent：宿主确实提供 / 当前只能串行。缺少并行能力不阻断单组流程。
 
-doctor 不证明浏览器、模型画面能力或真实配音已通过。没有系统连接信息就不启动同步上传；本版尚未实现系统接口。
+doctor 不证明浏览器、模型画面能力或真实配音已通过。任务提供连接时，可调用兼容后端的 TTS 和进度接口；没有连接时使用本地方式。图像接口与课程包上传尚未实现。
 
 ## 更新与卸载
 
