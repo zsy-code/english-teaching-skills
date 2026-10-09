@@ -1,0 +1,8 @@
+{
+  "name": "english-teaching-skills-runtime",
+  "version": "0.5.1",
+  "private": true,
+  "description": "Local animation dependencies for English teaching resource skills",
+  "engines": { "node": ">=22" },
+  "dependencies": { "hyperframes": "0.8.141", "gsap": "3.14.2" }
+}

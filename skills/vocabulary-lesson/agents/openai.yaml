@@ -1,0 +1,4 @@
+interface:
+  display_name: "词汇教学课程"
+  short_description: "确认教学方案，联合设计台词与画面，制作带配音和互动的 HTML 动画课程"
+  default_prompt: "$vocabulary-lesson 请根据提供的词汇和要求制作课程。"

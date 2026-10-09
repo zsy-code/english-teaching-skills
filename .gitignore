@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.DS_Store
+reviews/
+design/
+manual-tests/
+node_modules/
+.env
+.env.*
+*.local.json
+.data/
+.venv/
+dist/
+*.log
