@@ -20,7 +20,7 @@ Claude Code 使用 `--agent claude-code`，Cursor 使用 `--agent cursor`。其�
 
 | 技能 | 能做什么 | 状态 |
 | --- | --- | --- |
-| [vocabulary-lesson](skills/vocabulary-lesson/SKILL.md) | 从一组或多组词汇制作互动 HTML 教学课程 | 已实现本地方案、制作和 ZIP 交付 |
+| [vocabulary-lesson](skills/vocabulary-lesson/SKILL.md) | 从一组或多组词汇制作互动 HTML 教学课程 | 已实现方案、制作、ZIP 交付与可选 Web 同步 |
 
 长难句、语法、课文等技能后续加入同一仓库，目前不提供空占位技能。
 
@@ -46,7 +46,7 @@ Claude Code 使用 `--agent claude-code`，Cursor 使用 `--agent cursor`。其�
 - 单组可串行制作；多组在宿主具备子 agent 工具时并行，不绑定某个模型或工具名称。
 - 当前完整教学试跑在 Codex 中完成。安装目录兼容不等于已在所有框架验证相同制作质量。
 - HyperFrames、浏览器和可信配音模块是制作依赖。缺少时明确报告，不能把无声文件当作配音成功。
-- 当前交付本地 HTML 课程包。支持任务接口提供的 TTS 和进度同步，复用同一任务 key；图像服务和课程包上传尚未实现。没有连接时检查本地替代方式，不追问上传配置。
+- 当前交付本地 HTML 课程包。支持任务接口提供的 TTS、进度、教学材料同步和课程包上传，复用同一任务 key；图像服务暂未接入。没有连接时检查本地替代方式，不追问上传配置。
 
 ## 仓库结构
 

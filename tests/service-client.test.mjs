@@ -23,3 +23,19 @@ test('JSON error body and corrupt audio cannot become successful WAV files',asyn
   const c=createClient(connection,async()=>new Response(body,{headers:{'content-type':type}}));await assert.rejects(c.tts({}),ServiceError);
  }
 });
+
+test('material, binary delivery and reference download use scoped auth without serializing ZIP',async()=>{
+ const calls=[],zip=Buffer.from('ZIP'),ref=Buffer.from('reference');const c=createClient(connection,async(url,init)=>{calls.push({url,init});return url.includes('/references/')?new Response(ref):Response.json({received:true})});
+ await c.material({groupId:'g1',kind:'plan',version:1,content:'# plan'});assert.equal((await c.upload(zip)).received,true);assert.deepEqual(await c.reference('ref-1'),ref);
+ assert.equal(calls[1].init.body,zip);assert.equal(calls[1].init.headers['Content-Type'],'application/octet-stream');
+ for(const item of calls)assert.equal(item.init.headers.Authorization,'Bearer test-task-key');
+ assert.throws(()=>c.reference('../secret'),ServiceError);
+});
+
+test('shared player validates arbitrary supported canvas and protects captions',async()=>{
+ await import('../skills/vocabulary-lesson/assets/lesson-player/contract.js');
+ const course={version:1,id:'test',title:'test',canvas:{width:1080,height:1920},duration:10,audio:'audio/test.wav',source:{type:'html-gsap',timelineKey:'test',contentHeight:1500}};
+ assert.equal(globalThis.LexiPlayerContract.validate(course).canvas.height,1920);
+ assert.throws(()=>globalThis.LexiPlayerContract.validate({...course,canvas:{width:0,height:1920}}));
+ const scale=globalThis.LexiPlayerContract.contentScale({canvasHeight:1920,uiScale:.5625,contentHeight:1700,captionHeight:120,captionBottom:90,controlsVisible:true});assert.ok(scale*1700+120+90+18<=1920);
+});

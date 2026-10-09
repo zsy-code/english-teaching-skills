@@ -11,6 +11,14 @@
     const root=host.shadowRoot||host.attachShadow({mode:'open'});
     root.innerHTML='<style>'+STYLES+'</style>'+TEMPLATE;
     const $=id=>root.getElementById(id),shell=$('canvas-shell'),transport=$('transport'),seek=$('seek');
+    const uiScale=Math.min(m.canvas.width/1080,m.canvas.height/1200);
+    shell.style.width=m.canvas.width+'px';shell.style.height=m.canvas.height+'px';
+    root.querySelector('header small').textContent=m.canvas.width+' × '+m.canvas.height;
+    const overlay=document.createElement('div');overlay.className='player-overlay';
+    overlay.style.cssText=`position:absolute;left:0;top:0;width:${m.canvas.width/uiScale}px;height:${m.canvas.height/uiScale}px;transform:scale(${uiScale});transform-origin:0 0;pointer-events:none`;
+    for(const id of ['player-caption','quiz','transport','error'])overlay.append($(id));shell.append(overlay);
+    $('quiz').style.pointerEvents='auto';
+    const visual=$('course-visual');visual.style.width=m.canvas.width+'px';visual.style.height=m.canvas.height+'px';visual.style.transformOrigin='50% 0';
     const quizzes=m.interactions,completed=new Set(),markerButtons=new Map(),tracks=[];
     const audio=new Audio(new URL(m.audio,document.baseURI).href);audio.preload='auto';
     const events=new AbortController(),cleanups=[];
@@ -25,7 +33,7 @@
     shell.classList.toggle('safe-content',Boolean(m.source.contentHeight));
     $('course-title').textContent=m.title;seek.max=m.duration;
     // Generated CSS/DOM stays inside this frame; fixed controls and captions stay in the ShadowRoot.
-    const iframe=document.createElement('iframe');iframe.title='课程讲解画面';iframe.tabIndex=-1;
+    const iframe=document.createElement('iframe');iframe.title='课程讲解画面';iframe.style.width=m.canvas.width+'px';iframe.style.height=m.canvas.height+'px';iframe.tabIndex=-1;
     iframe.setAttribute('sandbox','allow-scripts');
     iframe.setAttribute('aria-hidden','true');iframe.style.visibility='hidden';
     $('play').disabled=true;$('transport-play').disabled=true;
@@ -75,14 +83,14 @@
     }catch(e){if(!disposed)$('error').textContent=e.message;throw e;}
     if(disposed)throw new Error('播放器已卸载');
     $('play').disabled=false;$('transport-play').disabled=false;
-  function fit(){const box=$('canvas-viewport');shell.style.transform=`translate(-50%,-50%) scale(${Math.min(box.clientWidth/1920,box.clientHeight/1200)})`;}
+  function fit(){const box=$('canvas-viewport');shell.style.transform=`translate(-50%,-50%) scale(${Math.min(box.clientWidth/m.canvas.width,box.clientHeight/m.canvas.height)})`;}
   const viewportObserver=new ResizeObserver(fit);viewportObserver.observe($('canvas-viewport'));cleanups.push(()=>viewportObserver.disconnect());fit();
   const fmt=t=>`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`;
   let reservedCaptionHeight=0;
   function measureCaptionSpace(){
     if(!m.source.contentHeight)return;
     const probe=$('player-caption').cloneNode();probe.removeAttribute('id');probe.hidden=false;
-    probe.style.cssText='visibility:hidden!important;display:block!important;top:0;bottom:auto;transition:none';shell.append(probe);
+    probe.style.cssText='visibility:hidden!important;display:block!important;top:0;bottom:auto;transition:none';overlay.append(probe);
     reservedCaptionHeight=0;
     for(const cue of m.captions){probe.textContent=cue.text;reservedCaptionHeight=Math.max(reservedCaptionHeight,probe.offsetHeight);}
     probe.remove();fitContent();
@@ -90,7 +98,7 @@
   function fitContent(){
     if(!m.source.contentHeight)return;
     // Reserve the measured maximum once: caption gaps and scrubbing must not resize the lesson.
-    const scale=global.LexiPlayerContract.contentScale({contentHeight:m.source.contentHeight,captionHeight:reservedCaptionHeight,captionBottom:160,controlsVisible:true});
+    const scale=global.LexiPlayerContract.contentScale({contentHeight:m.source.contentHeight,captionHeight:reservedCaptionHeight*uiScale,captionBottom:160*uiScale,controlsVisible:true,canvasHeight:m.canvas.height,uiScale});
     $('course-visual').style.transform=`scale(${scale})`;
   }
   measureCaptionSpace();document.fonts.ready.then(()=>{if(!disposed)measureCaptionSpace();});

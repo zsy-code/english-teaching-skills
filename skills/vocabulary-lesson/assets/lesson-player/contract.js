@@ -7,9 +7,9 @@
     if(!course||course.version!==1)fail('version 必须为 1');
     text(course.id,'缺少课程 id');text(course.title,'缺少标题');
     if(number(course.duration,'时长必须是有限数字')<=0)fail('时长必须大于零');
-    if(course.canvas?.width!==1920||course.canvas?.height!==1200)fail('画布必须为 1920 × 1200');
+    if(!course.canvas||!['width','height'].every(k=>Number.isInteger(course.canvas[k])&&course.canvas[k]>=320&&course.canvas[k]<=7680))fail('画布宽高必须为 320 到 7680 的整数');
     if(course.source?.type!=='html-gsap')fail('目前支持 html-gsap 画面');
-    if(course.source.contentHeight!=null&&(number(course.source.contentHeight,'内容区域高度')<=0||course.source.contentHeight>1200))fail('内容区域高度必须在 0 到 1200 之间');
+    if(course.source.contentHeight!=null&&(number(course.source.contentHeight,'内容区域高度')<=0||course.source.contentHeight>course.canvas.height))fail('内容区域高度必须大于 0 且不超过画布高度');
     text(course.source.timelineKey,'缺少动画时间轴名称');
     const audio=text(course.audio,'缺少配音文件');
     if(!/^[\w./-]+$/.test(audio)||audio.startsWith('/')||audio.split('/').includes('..'))fail('配音必须为课程包内的相对路径');
@@ -31,8 +31,8 @@
     }
     return {...course,segments:[...segments],captions:[...captions].sort((a,b)=>a.start-b.start),interactions:[...interactions].sort((a,b)=>a.time-b.time)};
   }
-  function contentScale({contentHeight,captionHeight=0,captionBottom=43.2,controlsVisible=false}){
-    const limit=Math.min(controlsVisible?1024:1200,captionHeight?1200-captionBottom-captionHeight-32:1200);
+  function contentScale({contentHeight,captionHeight=0,captionBottom=43.2,controlsVisible=false,canvasHeight=1200,uiScale=1}){
+    const limit=Math.min(controlsVisible?canvasHeight-176*uiScale:canvasHeight,captionHeight?canvasHeight-captionBottom-captionHeight-32*uiScale:canvasHeight);
     return Math.min(1,Math.max(.1,limit/contentHeight));
   }
   global.LexiPlayerContract={validate,contentScale};

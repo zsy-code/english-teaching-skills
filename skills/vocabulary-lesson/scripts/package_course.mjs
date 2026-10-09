@@ -8,7 +8,7 @@ const base=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../assets/
 const json=v=>JSON.stringify(v).replaceAll('<','\\u003c').replaceAll('\u2028','\\u2028').replaceAll('\u2029','\\u2029');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const hash=b=>createHash('sha256').update(b).digest('hex');
-export async function packageCourse({scriptFile,timingFile,htmlFile,timelineKey,outDir,contentHeight=950}){
+export async function packageCourse({scriptFile,timingFile,htmlFile,timelineKey,outDir,contentHeight}){
   const scriptBytes=await fs.readFile(scriptFile), script=JSON.parse(scriptBytes);
   const timing=JSON.parse(await fs.readFile(timingFile,'utf8'));
   if(hash(scriptBytes)!==timing.scriptSha256)throw Error('脚本已改变，需重新生成配音时间表');
@@ -22,7 +22,7 @@ export async function packageCourse({scriptFile,timingFile,htmlFile,timelineKey,
     html=html.replace(m[0],()=>'<script>'+code.replaceAll('</script','<\\/script')+'</script>');
   }
   if(/<(?:script|link)\b[^>]*(?:src|href)=/i.test(html))throw Error('作品仍有未内联的脚本或样式资源');
-  const course=globalThis.LexiPlayerContract.validate({version:1,id:script.groupId,title:script.title,canvas:script.videoSize,duration:timing.duration,audio:'audio/narration.wav',source:{type:'html-gsap',timelineKey,contentHeight},segments:timing.scenes,captions:timing.captions,interactions:timing.interactions.map(item=>{
+  const course=globalThis.LexiPlayerContract.validate({version:1,id:script.groupId,title:script.title,canvas:script.videoSize,duration:timing.duration,audio:'audio/narration.wav',source:{type:'html-gsap',timelineKey,contentHeight:contentHeight??script.videoSize.height*950/1200},segments:timing.scenes,captions:timing.captions,interactions:timing.interactions.map(item=>{
     const q=item.interaction; const [lead,...lines]=q.prompt.split('\n').filter(Boolean);
     if(q.type!=='choice')throw Error('尚未支持的互动类型');
     return {id:item.id,time:item.time,title:'互动练习',heading:'试着用一用',sentence:lines.length?lines.join('　 '):lead,hint:lines.length?lead:undefined,options:q.options.map(o=>o.text),correct:q.options.findIndex(o=>o.id===q.answerId),explanation:q.feedback.correct,retry:q.feedback.incorrect,reviewTime:timing.scenes.find(s=>s.id===item.beatId).start};
@@ -41,6 +41,6 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   const args=process.argv.slice(2), flags={};
   for(let i=0;i<args.length;i+=2){if(!args[i].startsWith('--')||!args[i+1])throw Error('参数应为 --名称 值');flags[args[i].slice(2)]=args[i+1];}
   for(const k of ['script','timing','html','timeline','out'])if(!flags[k])throw Error('缺少 --'+k);
-  const data=await packageCourse({scriptFile:flags.script,timingFile:flags.timing,htmlFile:flags.html,timelineKey:flags.timeline,outDir:flags.out,contentHeight:flags['content-height']?Number(flags['content-height']):950});
+  const data=await packageCourse({scriptFile:flags.script,timingFile:flags.timing,htmlFile:flags.html,timelineKey:flags.timeline,outDir:flags.out,contentHeight:flags['content-height']?Number(flags['content-height']):undefined});
   console.log(JSON.stringify({out:flags.out,duration:data.duration,interactions:data.interactions.length}));
 }
