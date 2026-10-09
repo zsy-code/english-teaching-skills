@@ -29,6 +29,6 @@ status 使用 queued、planning、awaiting_input、awaiting_confirmation、appro
 
 暂停某组时尝试用实际工具停止其工作，核实后记录 paused；无法中断就说明仍在执行，不宣称已暂停。恢复时从已有材料继续。当前轮中已提出的问题应保持可见，用户可以一次回复多个组；等待人类回复时结束当前轮，不占用工具反复轮询。
 
-已确认组的流程中，已确认组进入 scripting，脚本完成并核对后标为 script_ready，随后 voicing，配音文件与时间核对完成后标为 audio_ready；未确认组继续等待。记录 audioVersion、audioPath、timingPath、audioScriptSha256 和 listeningStatus（pending 或 reviewed，附实际试听范围）。配音失败或暂停保留目录及完成条数；确认重试时从该目录接续。脚本变更后旧音频移入历史，不能仍标为当前可用。audio_ready 后进入 animating；画面、声音和互动接通并完成实际播放检查，才标 preview_ready，并保存 compositionPath、previewPath、verificationPath。preview_ready 表示可供观看，不代替用户的验收。尚未实现自动同步、后台常驻、跨会话锁或 Web 回复路由。
+已确认组的流程中，已确认组进入 scripting，脚本完成并核对后标为 script_ready，随后 voicing，配音文件与时间核对完成后标为 audio_ready；未确认组继续等待。记录 audioVersion、audioPath、timingPath、audioScriptSha256 和 listeningStatus（pending 或 reviewed，附实际试听范围）。配音失败或暂停保留目录及完成条数；确认重试时从该目录接续。脚本变更后旧音频移入历史，不能仍标为当前可用。audio_ready 后进入 animating；画面、声音和互动接通并完成实际播放检查，才标 preview_ready，并保存 compositionPath、previewPath、verificationPath。preview_ready 表示可供观看，不代替用户的验收。有任务连接时按 services.md 上报进度；尚未实现后台常驻、跨会话锁或 Web 回复路由。
 
 成品交付见 [本地成品交付](delivery.md)。delivered 仅表示本地 ZIP 已生成并独立验证，不代表上传成功或用户验收；delivery 记录与 previewAcceptance 分开。已交付后修改脚本、音轨或画面时，保留旧交付历史，重回相应制作状态，完成后导出新版本。
