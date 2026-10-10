@@ -26,7 +26,7 @@ Claude Code 使用 `--agent claude-code`，Cursor 使用 `--agent cursor`。其�
 
 | [sentence-lesson](skills/sentence-lesson/SKILL.md) | 每句一课，讲解整句意思、表达与结构 | 1.0 首版 |
 | [grammar-lesson](skills/grammar-lesson/SKILL.md) | 从原始材料设计完整语法课，每条规则最多一道练习 | 1.0 首版 |
-| [text-lesson](skills/text-lesson/SKILL.md) | 每篇一课，保留原文并讲解全文关系 | 1.0 首版 |
+| [text-lesson](skills/text-lesson/SKILL.md) | 每篇一课，理解全文结构，借助记忆提纲复述与背诵 | 1.1 |
 
 ## 安装后怎么使用
 
