@@ -41,7 +41,7 @@ node <skill>/scripts/service-client.mjs progress --connection <private>/connecti
 node <skill>/scripts/service-client.mjs event --connection <private>/connection.local.json --data <private>/event.json
 ```
 
-event.json：`{eventId,groupId,sequence,state,message,agentId?,planVersion?,scriptVersion?,pendingStage?,pendingQuestions?,counts?}`。每个新事件使用唯一 eventId，sequence 为该组上次值加 1，counts 为 `{done,total}`。同事件重试必须保持全部字段一致。已上报事件重试安全，失败时本地保留待发事件；同步失败不要求重做已经完成的课程材料。
+event.json：`{eventId,groupId,sequence,state,message,agentId?,planVersion?,scriptVersion?,pendingStage?,pendingQuestions?,counts?}`。pendingQuestions 在接口中是字符串数组；本地 batch 中的对象须转为“编号：问题”字符串，不能直接复制对象数组。每个新事件使用唯一 eventId，sequence 为该组上次值加 1，counts 为 `{done,total}`。同事件重试必须保持全部字段一致。已上报事件重试安全，失败时本地保留待发事件；同步失败不要求重做已经完成的课程材料。
 
 阶段变化、等待用户回复、失败、恢复和完成时上报；长配音每完成一批（例如 5 条）更新数量。message 只写事实和所需回复的摘要，不传密钥、内部提示词或用户无关资料。
 
