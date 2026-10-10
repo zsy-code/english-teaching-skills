@@ -16,6 +16,8 @@ npx skills add zsy-code/english-teaching-skills --skill vocabulary-lesson --agen
 
 Claude Code 使用 `--agent claude-code`，Cursor 使用 `--agent cursor`。其他框架由安装 agent 按指南适配。以上命令只安装本仓库技能文件；动画依赖和配音配置另见安装指南。
 
+课程制作有两个确认点：先确认教学方案，再确认完整逐句脚本（含画面与互动设计）。第二次确认后才开始配音、素材与动画制作，连续执行到成品交付。
+
 ## 当前技能
 
 | 技能 | 能做什么 | 状态 |

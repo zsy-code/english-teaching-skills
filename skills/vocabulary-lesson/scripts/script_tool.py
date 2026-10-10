@@ -64,7 +64,7 @@ def validate(data, batch_path, group_id, script_path):
     require(len(groups)==1, '批次中找不到唯一的执行组')
     group = groups[0]
     approval = group.get('approval')
-    require(group.get('status') in ['approved','scripting','script_ready','voicing','audio_ready','animating','preview_ready','delivered'] and isinstance(approval,dict), '该组尚未批准或当前已暂停/失效')
+    require(group.get('status') in ['approved','scripting','awaiting_confirmation','script_ready','voicing','audio_ready','animating','preview_ready','delivered'] and isinstance(approval,dict), '该组尚未批准或当前已暂停/失效')
     require(version(approval.get('planVersion'))==version(group.get('planVersion'))==data['planVersion'], '批准版本与当前方案或脚本不一致')
     plan = local_path(batch_path.parent, group.get('planPath'))
     require(script_path.resolve().parent==plan.parent, '脚本必须保存在该组方案所在目录')

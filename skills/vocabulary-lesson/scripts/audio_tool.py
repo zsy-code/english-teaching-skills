@@ -7,7 +7,7 @@ import os
 import re
 from pathlib import Path
 import wave
-from script_tool import validate, local_path, require
+from script_tool import validate, local_path, require, version
 
 
 def read(path):
@@ -44,9 +44,22 @@ def speech_request(script, pronunciation=None):
     return lines
 
 
+def require_script_approval(script_path, batch_path, group_id):
+    script = read(script_path)
+    group = next(g for g in read(batch_path)['groups'] if g.get('localId') == group_id)
+    approval = group.get('scriptApproval')
+    require(isinstance(approval, dict), '逐句脚本尚未获用户确认，不能制作音频')
+    require(group.get('status') in ['script_ready', 'voicing', 'audio_ready', 'animating', 'preview_ready', 'delivered'], '逐句脚本正在等待确认或已暂停')
+    require(version(approval.get('scriptVersion')) == script['version'] and
+            version(approval.get('planVersion')) == script['planVersion'] and
+            approval.get('scriptSha256') == digest(script_path), '脚本已变化，需重新确认当前逐句脚本')
+    require(all(isinstance(approval.get(k), str) and approval[k].strip() for k in ['userReply', 'confirmedAt']), '缺少逐句脚本的用户确认回复或时间')
+
+
 def prepare(script_path, batch_path, group, out, pronunciation_path=None):
     script = read(script_path)
     validate(script, batch_path, group, script_path)
+    require_script_approval(script_path, batch_path, group)
     out.mkdir(parents=True, exist_ok=True)
     pronunciation=read(pronunciation_path) if pronunciation_path else None
     request = dict(version=1, scriptSha256=digest(script_path), groupId=group,lines=speech_request(script,pronunciation))
@@ -73,6 +86,7 @@ def pcm(path):
 def assemble(script_path, batch_path, group, out, pause_path=None):
     script = read(script_path)
     validate(script, batch_path, group, script_path)
+    require_script_approval(script_path, batch_path, group)
     request = read(out / 'audio-request.json')
     require(request['scriptSha256'] == digest(script_path), '脚本已变化，请重新生成对应音频')
     expected = speech_request(script,request.get('pronunciation'))

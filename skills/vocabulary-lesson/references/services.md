@@ -52,7 +52,7 @@ event.json：`{eventId,groupId,sequence,state,message,agentId?,planVersion?,pend
 | preview_ready / delivered | 已有预览 / 已本地交付 |
 | paused / failed | 用户暂停 / 执行失败 |
 
-可直接上报 approved、script_ready、audio_ready。进入新阶段后更新 pendingQuestions，已解决时传空数组；agentId 为实际执行者标识，不编造 agent 状态。
+方案确认后上报 approved；脚本完成后上报 awaiting_confirmation，在 message 和 pendingQuestions 中说明“待确认逐句脚本”及版本，附已同步材料链接；用户明确确认当前脚本后才能上报 script_ready，之后进入 voicing。audio_ready 表示音频文件可用。进入新阶段后更新 pendingQuestions，已解决时传空数组；agentId 为实际执行者标识，不编造 agent 状态。
 
 同步只是记录，不代表用户批准方案，也不会控制或唤醒 agent。Web 的撤销 key 只停止后续服务访问；本地制作仍需用户在 agent 中暂停。用户确认仍在执行会话中完成。
 

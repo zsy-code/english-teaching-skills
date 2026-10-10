@@ -20,6 +20,8 @@ class AudioChecks(unittest.TestCase):
         second['visual']['cues']=[dict(speechId='s03',at='end',action='结束。')]
         f.script['beats'].append(second)
         f.path.write_text(json.dumps(f.script))
+        f.record['groups'][0].update(status='script_ready',scriptApproval=dict(scriptVersion=f.script['version'],planVersion=f.script['planVersion'],scriptSha256=audio.digest(f.path),userReply='确认逐句脚本',confirmedAt='2026-10-10T00:00:00Z'))
+        f.save_batch()
         self.out=f.group/'audio-v1'
         request=audio.prepare(f.path,f.batch,'g01',self.out)
         (self.out/'clips').mkdir()
@@ -54,7 +56,22 @@ class AudioChecks(unittest.TestCase):
     def test_stale_script_rejected_and_new_prepare_keeps_old_version(self):
         f=self.fixture;f.script['beats'][0]['speech'][0]['text']='改过的内容。';f.path.write_text(json.dumps(f.script))
         with self.assertRaisesRegex(ValueError,'脚本已变化'):self.assemble()
-        with self.assertRaisesRegex(ValueError,'新版本目录'):audio.prepare(f.path,f.batch,'g01',self.out)
+        with self.assertRaisesRegex(ValueError,'脚本已变化'):audio.prepare(f.path,f.batch,'g01',self.out)
+
+    def test_plan_approval_alone_cannot_prepare_audio(self):
+        f=self.fixture
+        f.record['groups'][0].pop('scriptApproval');f.save_batch()
+        out=f.group/'unapproved-audio'
+        with self.assertRaisesRegex(ValueError,'尚未获用户确认'):
+            audio.prepare(f.path,f.batch,'g01',out)
+        self.assertFalse(out.exists())
+
+    def test_other_script_version_and_missing_user_reply_rejected(self):
+        f=self.fixture;approval=f.record['groups'][0]['scriptApproval']
+        approval['scriptVersion']=99;f.save_batch()
+        with self.assertRaisesRegex(ValueError,'脚本已变化'):self.assemble()
+        approval['scriptVersion']=f.script['version'];approval['userReply']='';f.save_batch()
+        with self.assertRaisesRegex(ValueError,'用户确认回复'):self.assemble()
 
     def test_missing_audio_rejected(self):
         self.manifest['lines'].pop();self.save_manifest()
