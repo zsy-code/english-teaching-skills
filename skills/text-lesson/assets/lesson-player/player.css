@@ -1,0 +1,62 @@
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+:host{display:block;height:100%;min-height:0;overflow:hidden;background:#edf1ed;color:#294237;font:14px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif}
+.player-app{height:100%;display:flex;flex-direction:column;padding:0 26px 18px;max-width:1720px;margin:auto}
+header{height:70px;flex-shrink:0;display:flex;align-items:center;gap:18px}header strong{font-size:18px;letter-spacing:2px}header .title{flex:1;color:#53675e}header small{font-size:11px;color:#708477}
+.canvas-viewport{position:relative;min-height:0;flex:1;border:1px solid #d5ded5;background:#e1e7e1;border-radius:10px;overflow:hidden}
+.canvas-shell{width:1920px;height:1200px;position:absolute;left:50%;top:50%;transform-origin:center;background:white;outline:none}
+button{font:inherit;cursor:pointer;border:1px solid #d4dfd4;border-radius:7px;padding:10px 16px;background:white;color:#345541}button:hover{background:#f2f7f1}
+button:focus-visible,input:focus-visible{outline:4px solid #5b95ff;outline-offset:6px}button:disabled{opacity:.5;cursor:default}
+/* Controls live in the same 1920 × 1200 canvas as the lesson. */
+.transport{position:absolute;inset:0;z-index:40;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.controls-visible .transport{opacity:1;visibility:visible}
+.transport button,.transport input{pointer-events:auto}
+.center-play{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);width:173px;height:173px;display:grid;place-items:center;padding:0;border-radius:50%;border:1px solid #ffffff4d;background:#00000059;backdrop-filter:blur(2px);color:#fff;box-shadow:0 8px 40px #0000000c}
+.center-play:hover{background:#0009}.center-play svg{width:72px;height:72px;fill:currentColor}.pause-icon{display:none}.is-playing .play-icon{display:none}.is-playing .pause-icon{display:block}
+.player-controls{position:absolute;bottom:0;left:0;right:0;height:144px;padding:56px 56px 28px;color:white;background:linear-gradient(to top,rgba(36,26,19,.96) 0%,rgba(36,26,19,.84) 46%,rgba(36,26,19,0) 100%);pointer-events:auto}
+.control-row{height:60px;display:flex;align-items:center;gap:28px}.icon-button{border:0;border-radius:50%;background:transparent;color:white;display:grid;place-items:center;width:60px;height:60px;padding:12px}.icon-button:hover,.text-button:hover{background:#ffffff26}.icon-button svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.seek-wrap{position:relative;flex:1;height:60px;display:flex;align-items:center;min-width:0}
+#seek{--progress:0%;appearance:none;-webkit-appearance:none;width:100%;height:52px;margin:0;background:transparent;cursor:pointer;touch-action:none;position:relative;z-index:2}
+#seek::-webkit-slider-runnable-track{height:16px;border-radius:9px;background:transparent}
+#seek::-moz-range-track{height:16px;border-radius:9px;background:transparent}
+#seek::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:20px;height:20px;margin-top:-2px;border-radius:50%;background:transparent;box-shadow:none}
+#seek::-moz-range-thumb{width:20px;height:20px;border:0;border-radius:50%;background:transparent;box-shadow:none}
+#time{font:30px ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap;color:#ffffffe6;min-width:205px}
+.text-button{font-size:25px;padding:10px 15px;border:1px solid #ffffff59;color:white;background:transparent}.text-button[aria-pressed=false]{opacity:.55}
+/* Reserve room for raised captions without covering examples or translations. */
+.course-visual{position:absolute;inset:0;width:1920px;height:1200px;transform-origin:960px 0;transition:transform .25s}.course-visual iframe{width:1920px;height:1200px;border:0;display:block;pointer-events:none}.controls-visible .course-visual{transform:translateY(20px) scale(.87)}
+.caption{position:absolute;left:50%;bottom:43.2px;transform:translateX(-50%);width:92%;max-width:1612.8px;padding:21.6px 43.2px;border-radius:28.8px;background:rgba(0,0,0,.78);color:#fff;font-size:36px;font-weight:400;line-height:1.625;text-align:center;overflow-wrap:break-word;pointer-events:none;z-index:30;transition:bottom .25s}.controls-visible .caption{bottom:160px}.captions-off .caption{visibility:hidden}
+#error{position:absolute;top:110px;left:160px;right:160px;z-index:60;padding:24px 36px;font-size:28px;color:#8c3620;background:#fff2e8;border:2px solid #e9bea9;border-radius:16px;text-align:center}#error:empty{display:none}
+.quiz-view{z-index:50}
+.quiz-view{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:130px;gap:38px;color:#173c68}.quiz-view[hidden]{display:none}.quiz-view .eyebrow{font-size:26px;letter-spacing:5px;color:#c76b30}.quiz-view h1{margin:0;font-size:66px;font-weight:650}.quiz-view .question{font:56px Georgia,serif;margin:0}.quiz-view .question em{color:#c76b30;font-style:normal}.quiz-view .instruction{font-size:32px;margin:0;color:#65768b}.quiz-answers{display:flex;justify-content:center;gap:32px;margin-top:20px;width:100%;max-width:1660px}.quiz-answers button{flex:1 1 0;min-width:0;max-width:680px;overflow-wrap:anywhere;min-height:160px;font-size:36px;padding:30px;border:2px solid #d5dde7;color:#173c68;text-align:left;line-height:1.6}.quiz-answers button strong{display:inline-grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#f1f4f7;color:#607a91;margin-right:22px;font-size:29px}.quiz-answers button.correct{border-color:#5b8963;background:#f0f7ed}.quiz-answers button.wrong{border-color:#c78662;background:#fff6ee}.feedback{height:100px;text-align:center;font-size:31px;line-height:1.65;max-width:1440px;color:#506b58}.quiz-actions{display:flex;gap:28px}.quiz-actions button{font-size:30px;padding:19px 34px}.quiz-view:focus{outline:none}
+@media(prefers-reduced-motion:reduce){.transport,.course-visual,.caption{transition:none}}
+@media(max-width:700px){.player-app{padding:0 10px 12px}header{height:58px;gap:12px}header small{display:none}header strong{font-size:16px}header .title{font-size:12px}}
+
+/* skill-studio: hollow quiz dots, completed blue checks, active halo. */
+/* The 40px hit area contains a 20px dot: 10px internal space + 1px gap = 11px per side. */
+#seek-layout{position:absolute;inset:0;display:flex;align-items:center;gap:1px;pointer-events:none;z-index:3}
+.lesson-track{position:relative;flex-basis:0;min-width:10px;height:60px;display:flex;align-items:center}
+.lesson-track .track-bar{width:100%;height:16px;overflow:hidden;border-radius:999px;background:#ffffff40}
+.lesson-track .track-fill{display:block;height:100%;width:0;background:#5b95ff;border-radius:inherit}
+#seek-knob{position:absolute;top:20px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px #fb923c8c;transform:translateX(-50%);z-index:4;pointer-events:none}
+.quiz-active #seek-knob{display:none}
+.quiz-marker{position:relative;flex:0 0 40px;width:40px;height:60px;padding:0;border:0;background:transparent;display:grid;place-items:center;border-radius:12px;pointer-events:auto}
+.quiz-marker:hover{background:transparent}
+.quiz-marker .dot{display:block;width:20px;height:20px;border:4px solid rgba(207,224,255,.5);border-radius:50%;background:transparent;box-shadow:none;position:relative}
+.quiz-marker[data-done=true] .dot{background:#9cc0ff;border-color:#9cc0ff}
+.quiz-marker[data-done=true] .dot:after{content:"";position:absolute;left:50%;top:50%;width:5px;height:11px;border:solid #0a2a63;border-width:0 3.5px 3.5px 0;transform:translate(-50%,-58%) rotate(45deg)}
+.quiz-marker[aria-current=step] .dot,.quiz-marker:hover .dot,.quiz-marker:focus-visible .dot{box-shadow:0 0 0 7px rgba(156,192,255,.34)}
+.marker-tooltip{position:absolute;bottom:68px;padding:12px 20px;border-radius:12px;white-space:nowrap;background:#263545;color:#fff;font-size:25px;opacity:0;visibility:hidden;pointer-events:none}
+.quiz-marker:last-child .marker-tooltip{right:0}
+.quiz-marker:hover .marker-tooltip,.quiz-marker:focus-visible .marker-tooltip{opacity:1;visibility:visible}
+.quiz-active .transport{z-index:60}.quiz-active .center-play{display:none}
+.quiz-active #seek::-webkit-slider-thumb{opacity:0}.quiz-active #seek::-moz-range-thumb{opacity:0}
+.quiz-actions button[hidden]{display:none}#quiz-continue:not(:disabled){background:#2f6bff;border-color:#2f6bff;color:white}
+
+#transport-play svg{fill:currentColor;stroke:none}
+
+.quiz-active .caption{display:none}
+
+/* Content sizing follows the measured caption height; CSS transitions must not briefly cross the caption. */
+.safe-content .course-visual{transition:none}
+.safe-content .caption{transition:none}

@@ -1,0 +1,22 @@
+<div class="player-app"><header><strong>词间</strong><span id="course-title" class="title"></span><small>1920 × 1200</small></header>
+<div id="canvas-viewport" class="canvas-viewport"><div id="canvas-shell" class="canvas-shell controls-visible" tabindex="0" aria-label="课程播放器，空格播放或暂停，左右方向键跳转">
+<div id="course-visual" class="course-visual"></div>
+<div id="player-caption" class="caption" hidden></div>
+<section id="quiz" class="quiz-view" aria-label="互动练习" tabindex="-1" hidden>
+<div id="quiz-number" class="eyebrow">互动练习</div><h1 id="quiz-heading"></h1>
+<p id="quiz-sentence" class="question"></p><p id="quiz-hint" class="instruction"></p>
+<div id="quiz-answers" class="quiz-answers"></div>
+<div id="feedback" class="feedback" aria-live="polite"></div>
+<div class="quiz-actions"><button id="back-to-story">回看相关讲解</button><button id="quiz-continue" disabled>答对后继续</button><button id="quiz-replay" hidden>重新播放</button></div>
+</section>
+<div id="transport" class="transport">
+<button id="play" class="center-play" aria-label="播放" title="播放 / 暂停（空格）"><svg viewBox="0 0 48 48" aria-hidden="true"><path class="play-icon" d="M17 9 39 24 17 39Z"/><path class="pause-icon" d="M13 10h8v28h-8zm14 0h8v28h-8z"/></svg></button>
+<div class="player-controls">
+<div class="control-row">
+<button id="transport-play" class="icon-button" aria-label="播放" title="播放 / 暂停"><svg viewBox="0 0 48 48" aria-hidden="true"><path class="play-icon" d="M17 9 39 24 17 39Z"/><path class="pause-icon" d="M13 10h8v28h-8zm14 0h8v28h-8z"/></svg></button>
+<div class="seek-wrap"><input id="seek" type="range" min="0" max="0" step="0.01" value="0" aria-label="课程播放进度（秒）"><div id="seek-layout" aria-label="讲解片段与互动练习"></div><i id="seek-knob" aria-hidden="true"></i></div>
+<span id="time">0:00 / 0:00</span>
+<button id="captions-toggle" class="text-button" aria-label="显示字幕" aria-pressed="true" title="字幕开关">字幕</button>
+</div></div></div>
+<p id="error" role="alert"></p>
+</div></div></div>

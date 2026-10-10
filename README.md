@@ -1,6 +1,6 @@
 # 英语教学资源 Skills
 
-让 AI agent 从词汇和教学想法出发，制作带配音、动画和互动练习的 HTML 课程。
+让 AI agent 从词汇、句子、语法或课文材料出发，制作带配音、动画和互动练习的 HTML 课程。
 
 ## 给 agent 一句话即可开始安装
 
@@ -11,7 +11,7 @@
 也可使用标准技能安装工具（以 Codex 为例）：
 
 ```sh
-npx skills add zsy-code/english-teaching-skills --skill vocabulary-lesson --agent codex --global
+npx skills add zsy-code/english-teaching-skills --skill vocabulary-lesson sentence-lesson grammar-lesson text-lesson --agent codex --global
 ```
 
 Claude Code 使用 `--agent claude-code`，Cursor 使用 `--agent cursor`。其他框架由安装 agent 按指南适配。以上命令只安装本仓库技能文件；动画依赖和配音配置另见安装指南。
@@ -24,7 +24,9 @@ Claude Code 使用 `--agent claude-code`，Cursor 使用 `--agent cursor`。其�
 | --- | --- | --- |
 | [vocabulary-lesson](skills/vocabulary-lesson/SKILL.md) | 从一组或多组词汇制作互动 HTML 教学课程 | 已实现方案、制作、ZIP 交付与可选 Web 同步 |
 
-长难句、语法、课文等技能后续加入同一仓库，目前不提供空占位技能。
+| [sentence-lesson](skills/sentence-lesson/SKILL.md) | 每句一课，讲解整句意思、表达与结构 | 1.0 首版 |
+| [grammar-lesson](skills/grammar-lesson/SKILL.md) | 从原始材料设计完整语法课，每条规则最多一道练习 | 1.0 首版 |
+| [text-lesson](skills/text-lesson/SKILL.md) | 每篇一课，保留原文并讲解全文关系 | 1.0 首版 |
 
 ## 安装后怎么使用
 
@@ -36,7 +38,7 @@ Claude Code 使用 `--agent claude-code`，Cursor 使用 `--agent cursor`。其�
 
 ```text
 读取词汇与要求 → 教学目标、整课走向、主要场景和基础台词 → 用户确认
-→ 沿已确认方案细化逐句台词、动画、素材与互动 → 配音
+→ 沿已确认方案细化逐句台词、动画、素材与互动 → 用户确认完整脚本 → 配音
 → HyperFrames 动画 → 固定播放器 → 验证并交付 ZIP
 ```
 
@@ -65,3 +67,5 @@ tests/                    不依赖历史课程的自动检查
 运行自动检查：`python3 -m unittest discover -s tests -v`，需要 Python 3.9+ 和 Node.js 22+。
 
 安装方式参考：[跨框架 skills CLI](https://github.com/vercel-labs/skills)、[HyperFrames](https://github.com/heygen-com/hyperframes)。
+
+生产脚本与播放器以 vocabulary-lesson 中的版本为统一源，运行 python3 scripts/sync-production.py 同步到三个专项的独立安装包；教学提示词独立维护。单独安装任何专项均包含所需工具，无需调用词汇教学流程。

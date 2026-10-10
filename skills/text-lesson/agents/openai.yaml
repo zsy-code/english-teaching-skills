@@ -1,0 +1,4 @@
+interface:
+  display_name: "课文教学课程"
+  short_description: "确认方案与逐句脚本后制作互动 HTML 课程"
+  default_prompt: "使用 $text-lesson 根据提供的材料制作课程。"

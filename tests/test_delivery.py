@@ -34,6 +34,18 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual(check(self.out)['courses'][0]['scriptVersion'],1)
         with zipfile.ZipFile(self.out) as z:
             self.assertNotIn('courses/g01/.env',z.namelist());self.assertIn('materials/g01/composition.html',z.namelist())
+    def test_subject_v2_delivery(self):
+        self.batch['lessonType']='grammar'
+        self.batch['groups'][0].update(sourceItemId='item-1',sourceHash='a'*64)
+        self.save()
+        result=export(self.bp,self.out)
+        self.assertEqual(result['version'],2)
+        self.assertEqual(result['courses'][0]['sourceItemId'],'item-1')
+        self.assertNotIn('words',result['courses'][0])
+        self.assertEqual(check(self.out)['courses'][0]['lessonType'],'grammar')
+    def test_subject_missing_source_rejected(self):
+        self.batch['lessonType']='text';self.save()
+        with self.assertRaisesRegex(ValueError,'sourceHash'):export(self.bp,self.out)
     def test_pending_group_cannot_export(self):
         self.batch['groups'][0]['status']='awaiting_confirmation';self.save()
         with self.assertRaisesRegex(ValueError,'尚未完成'):export(self.bp,self.out,['g01'])

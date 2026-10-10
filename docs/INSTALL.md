@@ -1,6 +1,6 @@
 # 安装指南：供执行安装的 agent 阅读
 
-安装对象是英语教学资源技能，不是 Web 系统，也不是后台会话控制器。当前技能为 vocabulary-lesson。用户发出“帮我安装 + 仓库链接”即要求执行安装；遵守宿主权限机制，不额外重复确认常规步骤。
+安装对象是英语教学资源技能，不是 Web 系统，也不是后台会话控制器。当前技能为 vocabulary-lesson、sentence-lesson、grammar-lesson、text-lesson。可按需单独安装，每个目录自带生产工具。用户发出“帮我安装 + 仓库链接”即要求执行安装；遵守宿主权限机制，不额外重复确认常规步骤。
 
 ## 1. 确定安装位置
 
@@ -9,7 +9,7 @@
 优先使用 [skills CLI](https://github.com/vercel-labs/skills) 的框架标识：Codex 为 codex、Claude Code 为 claude-code、Cursor 为 cursor；其他标识查看其支持列表，不猜测。
 
 ```sh
-npx skills add zsy-code/english-teaching-skills --skill vocabulary-lesson --agent codex --global
+npx skills add zsy-code/english-teaching-skills --skill vocabulary-lesson sentence-lesson grammar-lesson text-lesson --agent codex --global
 ```
 
 将 codex 替换成当前框架。确认目标无冲突后，非交互执行可加 `--yes`；用户要求仅当前项目时省略 `--global`。已有本技能时核对来源和本地改动，相同版本复用，更新保留改动备份。不要用 `--all` 顺带安装其他 agent 的技能。
@@ -58,7 +58,7 @@ python3 scripts/doctor.py --skill-dir <vocabulary-lesson目录> --runtime-dir <�
 
 可加 `--connection <connection.local.json>` 或 `--tts-provider <可信模块路径>`，仅检查文件存在，不读取凭据、不导入模块、不调用服务。多个技能父目录可重复传入 `--hyperframes-skills-dir`。
 
-实际确认 agent 能发现/读取 vocabulary-lesson、引用文件与播放器素材。必要时按框架说明刷新或新开会话；磁盘文件存在不等于模型已加载。首次使用可只请它提出一组单词的方案，核对会等待用户确认，不在安装时自动开展制作。
+实际确认 agent 能发现/读取所选专项 skill、引用文件与播放器素材。必要时按框架说明刷新或新开会话；磁盘文件存在不等于模型已加载。首次使用可只请它提出一组单词的方案，核对会等待用户确认，不在安装时自动开展制作。
 
 回报区分：
 
