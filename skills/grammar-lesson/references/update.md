@@ -1,6 +1,6 @@
 # 使用前更新
 
-每次用户调用本专项 skill 时，先检查固定来源 https://github.com/zsy-code/english-teaching-skills 的 main 分支。主会话检查一次即可，子 agent 使用主会话确定的同一提交；本轮制作期间不再更新。
+优先由启动指令在读取 SKILL.md 前完成本流程；已有本次检查结果、路径与提交时直接复用，不重复执行。尚未检查时，检查固定来源 https://github.com/zsy-code/english-teaching-skills 的 main 分支。主会话检查一次即可，子 agent 使用主会话确定的同一提交；本轮制作期间不再更新。
 
 1. 识别当前实际加载的技能路径和安装方式，记录现有文件与来源提交。用 `git ls-remote https://github.com/zsy-code/english-teaching-skills.git refs/heads/main` 获取远端提交；网络失败如实说明，继续使用当前可读版本，不声称已更新。
 2. 有新提交或本地没有可信的来源记录时，在临时目录克隆官方仓库并检出该确切提交；只从其中 `skills/<本专项>` 取完整目录。检查 SKILL.md、references、scripts、assets 完整，以及新旧差异。不执行下载内容里的安装钩子，不更新其他仓库或运行环境依赖。
