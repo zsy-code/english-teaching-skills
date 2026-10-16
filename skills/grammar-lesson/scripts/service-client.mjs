@@ -29,7 +29,7 @@ export function createClient(connection,fetcher=globalThis.fetch){
       return bytes;
     }catch(e){if(e instanceof ServiceError)throw e;throw new ServiceError('invalid_response')}
   }
-  return {material:(data,signal)=>call('materials',data,signal),upload:(bytes,signal)=>call('delivery',bytes,signal,false,true),reference:(id,signal)=>{if(!/^[A-Za-z0-9_-]+$/.test(id))throw new ServiceError('invalid_reference');return call('references/'+id,null,signal,'reference')},capabilities:signal=>call('capabilities',null,signal),progress:signal=>call('progress',null,signal),event:(data,signal)=>call('events',data,signal),tts:(data,signal)=>call('tts',data,signal,true)};
+  return {paper:(data,signal)=>call('papers',data,signal),material:(data,signal)=>call('materials',data,signal),upload:(bytes,signal)=>call('delivery',bytes,signal,false,true),reference:(id,signal)=>{if(!/^[A-Za-z0-9_-]+$/.test(id))throw new ServiceError('invalid_reference');return call('references/'+id,null,signal,'reference')},capabilities:signal=>call('capabilities',null,signal),progress:signal=>call('progress',null,signal),event:(data,signal)=>call('events',data,signal),tts:(data,signal)=>call('tts',data,signal,true)};
 }
 export async function loadClient(file,fetcher){
   let connection;try{connection=JSON.parse(await fs.readFile(file,'utf8'))}catch{throw new ServiceError('invalid_connection_file')}
@@ -37,12 +37,12 @@ export async function loadClient(file,fetcher){
 }
 async function main(){
   const [command,...args]=process.argv.slice(2),opts={};for(let i=0;i<args.length;i+=2)opts[args[i]]=args[i+1];
-  if(!opts['--connection']||!['capabilities','progress','event','material','upload','reference'].includes(command))throw new ServiceError('usage: capabilities|progress|event|material|upload|reference --connection FILE [--data FILE | --id ID --out FILE]');
+  if(!opts['--connection']||!['capabilities','progress','event','material','paper','upload','reference'].includes(command))throw new ServiceError('usage: capabilities|progress|event|material|paper|upload|reference --connection FILE [--data FILE | --id ID --out FILE]');
   const client=await loadClient(opts['--connection']);
   let result;
   if(command==='reference'){if(!opts['--out'])throw new ServiceError('missing_output');await fs.writeFile(opts['--out'],await client.reference(opts['--id']),{flag:'wx'});result={saved:true}}
   else if(command==='upload'){const info=await fs.stat(opts['--data']);if(info.size>100*1024*1024)throw new ServiceError('archive_too_large');result=await client.upload(await fs.readFile(opts['--data']))}
-  else if(['event','material'].includes(command))result=await client[command](JSON.parse(await fs.readFile(opts['--data'],'utf8')));
+  else if(['event','material','paper'].includes(command))result=await client[command](JSON.parse(await fs.readFile(opts['--data'],'utf8')));
   else result=await client[command]();
   console.log(JSON.stringify(result,null,2));
 }

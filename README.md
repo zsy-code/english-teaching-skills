@@ -69,3 +69,7 @@ tests/                    不依赖历史课程的自动检查
 安装方式参考：[跨框架 skills CLI](https://github.com/vercel-labs/skills)、[HyperFrames](https://github.com/heygen-com/hyperframes)。
 
 生产脚本与播放器以 vocabulary-lesson 中的版本为统一源，运行 python3 scripts/sync-production.py 同步到三个专项的独立安装包；教学提示词独立维护。单独安装任何专项均包含所需工具，无需调用词汇教学流程。
+
+## 单元出题
+
+`skills/question-generation` 根据单元资料及三档配置生成选择、填空、阅读题与逐题讲解。先确认方案，再确认试题答案，最后确认逐句脚本；配置由平台传入，支持本地制作和平台回传。

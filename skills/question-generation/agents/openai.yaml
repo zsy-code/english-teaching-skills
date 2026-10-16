@@ -1,0 +1,4 @@
+interface:
+  display_name: "单元出题"
+  short_description: "按三档配置生成单元试卷、答案解析和逐题讲解"
+  default_prompt: "根据单元资料和组卷配置，先提出出题方案供我确认。"

@@ -1,6 +1,6 @@
 # 安装指南：供执行安装的 agent 阅读
 
-安装对象是英语教学资源技能，不是 Web 系统，也不是后台会话控制器。当前技能为 vocabulary-lesson、sentence-lesson、grammar-lesson、text-lesson。可按需单独安装，每个目录自带生产工具。用户发出“帮我安装 + 仓库链接”即要求执行安装；遵守宿主权限机制，不额外重复确认常规步骤。
+安装对象是英语教学资源技能，不是 Web 系统，也不是后台会话控制器。当前技能为 vocabulary-lesson、sentence-lesson、grammar-lesson、text-lesson、question-generation。可按需单独安装，每个目录自带生产工具。用户发出“帮我安装 + 仓库链接”即要求执行安装；遵守宿主权限机制，不额外重复确认常规步骤。
 
 ## 1. 确定安装位置
 
@@ -9,7 +9,7 @@
 优先使用 [skills CLI](https://github.com/vercel-labs/skills) 的框架标识：Codex 为 codex、Claude Code 为 claude-code、Cursor 为 cursor；其他标识查看其支持列表，不猜测。
 
 ```sh
-npx skills add zsy-code/english-teaching-skills --skill vocabulary-lesson sentence-lesson grammar-lesson text-lesson --agent codex --global
+npx skills add zsy-code/english-teaching-skills --skill vocabulary-lesson sentence-lesson grammar-lesson text-lesson question-generation --agent codex --global
 ```
 
 将 codex 替换成当前框架。确认目标无冲突后，非交互执行可加 `--yes`；用户要求仅当前项目时省略 `--global`。已有本技能时核对来源和本地改动，相同版本复用，更新保留改动备份。不要用 `--all` 顺带安装其他 agent 的技能。

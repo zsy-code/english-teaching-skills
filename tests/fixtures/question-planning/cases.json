@@ -1,0 +1,88 @@
+{
+  "sources": [
+    {
+      "id": "words",
+      "title": "单元词汇",
+      "content": "school, library, classroom, read, study, quiet；常用搭配 read books, study in the library"
+    },
+    {
+      "id": "sentences",
+      "title": "单元句子",
+      "content": "I read books in the library. She studies in the classroom. The library is quiet. We like our school because it is beautiful."
+    },
+    {
+      "id": "grammar",
+      "title": "教学范围",
+      "content": "一般现在时肯定句：主语为 I/we/they 时用动词原形；主语为 he/she 时用动词第三人称单数形式。study → studies。because 引出原因。未提供其他时态教学材料。"
+    },
+    {
+      "id": "text",
+      "title": "课文",
+      "content": "This is our school. We read books in the library. The library is quiet. My friend Anna studies in the classroom after school. We like our school because it is beautiful."
+    }
+  ],
+  "cases": [
+    {
+      "id": "balanced",
+      "selected": [
+        "basic",
+        "advanced",
+        "challenge"
+      ],
+      "requirements": "词汇与语法都要有，按单元重点合理分配。",
+      "eachTier": {
+        "choice": 4,
+        "fill": 2,
+        "minBlanks": 1,
+        "maxBlanks": 2,
+        "reading": 1,
+        "readingQuestions": 3
+      }
+    },
+    {
+      "id": "vocabulary",
+      "selected": [
+        "basic",
+        "advanced",
+        "challenge"
+      ],
+      "requirements": "主要考词义和常见搭配，不考动词词形变化。阅读考信息理解。",
+      "eachTier": {
+        "choice": 4,
+        "fill": 2,
+        "minBlanks": 1,
+        "maxBlanks": 2,
+        "reading": 1,
+        "readingQuestions": 3
+      }
+    },
+    {
+      "id": "grammar",
+      "selected": [
+        "advanced"
+      ],
+      "requirements": "选择和填空重点考一般现在时肯定句中主语与动词形式；不安排阅读。",
+      "eachTier": {
+        "choice": 4,
+        "fill": 2,
+        "minBlanks": 1,
+        "maxBlanks": 2,
+        "reading": 0
+      }
+    },
+    {
+      "id": "scope-conflict",
+      "selected": [
+        "challenge"
+      ],
+      "requirements": "全部考过去完成时，禁止增加单元外考查内容。",
+      "eachTier": {
+        "choice": 4,
+        "fill": 2,
+        "minBlanks": 1,
+        "maxBlanks": 2,
+        "reading": 0
+      }
+    }
+  ]
+}

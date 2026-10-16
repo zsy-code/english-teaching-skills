@@ -24,7 +24,7 @@ def local(base, name):
 def export(batch_file, out, selected=None):
     batch_file=batch_file.resolve();base=batch_file.parent;batch=read(batch_file)
     require(not out.exists(), '交付文件已存在，请使用新的版本文件名')
-    lesson_type=batch.get('lessonType','vocabulary');require(lesson_type in ('vocabulary','sentence','grammar','text'),'未知课程类型')
+    lesson_type=batch.get('lessonType','vocabulary');require(lesson_type in ('vocabulary','sentence','grammar','text','question'),'未知课程类型')
     format_version=1 if lesson_type=='vocabulary' else 2
     groups=batch['groups'];ids=[g['localId'] for g in groups]
     require(len(ids)==len(set(ids)), '组编号重复')
@@ -102,7 +102,7 @@ def check(archive):
         for c in m['courses']:
             require(c['entry'] in names, '课程入口缺失')
             if m['version']==2:
-                require(c.get('lessonType') in ('sentence','grammar','text') and c.get('sourceItemId') and re.fullmatch(r'[a-f0-9]{64}',c.get('sourceHash','')), '新专项来源信息缺失')
+                require(c.get('lessonType') in ('sentence','grammar','text','question') and c.get('sourceItemId') and re.fullmatch(r'[a-f0-9]{64}',c.get('sourceHash','')), '新专项来源信息缺失')
 
         return m
 
